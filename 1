@@ -1,0 +1,90 @@
+#include <iostream>
+using namespace std;
+
+class DynamicIntegerArray {
+private:
+    int* data;
+    int size;
+
+public:
+    DynamicIntegerArray() {
+        this->size = 0;
+        data = new int[0];
+    }
+
+    DynamicIntegerArray(int arr[], int size) {
+        this->size = size;
+        data = new int[size];
+        for (int i = 0; i < size; i++)
+            data[i] = arr[i];
+    }
+
+    DynamicIntegerArray(const DynamicIntegerArray& o) {
+        this->size = o.size;
+        data = new int[o.size];
+        for (int i = 0; i < o.size; i++)
+            data[i] = o.data[i];
+    }
+
+    void print() const {
+        cout << " [ ";
+        for (int i = 0; i < size; i++)
+            cout << data[i] << " ";
+        cout << "]" << endl;
+    }
+
+    void pushback(int valor) {
+        int* Data2 = new int[size + 1];
+        for (int i = 0; i < size; i++)
+            Data2[i] = data[i];
+        Data2[size] = valor;
+        delete[] data;
+        data = Data2;
+        size++;
+    }
+
+    void insert(int valor, int pos) {
+        int* Data2 = new int[size + 1];
+        for (int i = 0; i < pos; i++)
+            Data2[i] = data[i];
+        Data2[pos-1] = valor;
+        for (int i = pos; i < size+1; i++)
+            Data2[i] = data[i-1];
+        delete[] data;
+        data = Data2;
+        size++;
+    }
+
+    void remove(int pos) {
+        int* Data2 = new int[size - 1];
+        for (int i = 0; i < pos; i++)
+            Data2[i] = data[i];
+        for (int i = pos + 1; i < size; i++)
+            Data2[i - 1] = data[i];
+        delete[] data;
+        data = Data2;
+        size--;
+    }
+
+    ~DynamicIntegerArray() {
+        delete[] data;
+    }
+};
+
+int main() {
+    int array[] = {1 , 5, 7, 9};
+    DynamicIntegerArray ejemplo(array, 4);
+    
+    ejemplo.print(); 
+
+    ejemplo.pushback(11);
+    ejemplo.print();
+
+    ejemplo.insert(3, 2);
+    ejemplo.print(); 
+
+    ejemplo.remove(6);
+    ejemplo.print(); 
+
+    return 0;
+}
