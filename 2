@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+
+template<typename Template>
+class DynamicArray {
+private:
+    Template* data;
+    int size;
+
+public:
+    DynamicArray() : data(nullptr), size(0) {}
+
+    DynamicArray(Template arr[], int size) : size(size) {
+        data = new Template[size];
+        for (int i = 0; i < size; i++)
+            data[i] = arr[i];
+    }
+
+    DynamicArray(const DynamicArray& nuevo) : size(nuevo.size) {
+        data = new Template[nuevo.size];
+        for (int i = 0; i < nuevo.size; i++)
+            data[i] = nuevo.data[i];
+    }
+
+    void print() const {
+        cout << " [ ";
+        for (int i = 0; i < size; i++)
+            cout << data[i] << " ";
+        cout << "]" << endl;
+    }
+
+    void pushback(Template valor) {
+        Template* newData = new Template[size + 1];
+        for (int i = 0; i < size; i++)
+            newData[i] = data[i];
+        newData[size] = valor;
+        delete[] data;
+        data = newData;
+        size++;
+    }
+
+    void insert(Template valor, int pos) {
+        Template* newData = new Template[size + 1];
+        for (int i = 0; i < pos; i++)
+            newData[i] = data[i];
+        newData[pos] = valor;
+        for (int i = pos + 1; i < size + 1; i++)
+            newData[i] = data[i - 1];
+        delete[] data;
+        data = newData;
+        size++;
+    }
+
+    void remove(int pos) {
+        Template* newData = new Template[size - 1];
+        for (int i = 0; i < pos; i++)
+            newData[i] = data[i];
+        for (int i = pos + 1; i < size; i++)
+            newData[i - 1] = data[i];
+        delete[] data;
+        data = newData;
+        size--;
+    }
+
+    ~DynamicArray() {
+        delete[] data;
+    }
+};
+
+//clase de ejemplo
+class Entero {
+private:
+    int valor;
+
+public:
+    Entero() : valor(0) {}
+    Entero(int x) : valor(x) {}
+
+    int getValor() const {
+        return valor;
+    }
+
+    friend ostream& operator<<(ostream& cout, const Entero& entero) {
+        cout << entero.valor;
+        return cout;
+    }
+};
+
+int main() {
+	//flota
+	float Array_2[] = { 1.1, 2.2, 3.3};
+    DynamicArray<float> flotantes(Array_2, 3);
+    flotantes.print();
+    //int
+    int Array_1[] = { 1, 2, 3};
+    DynamicArray<int> enteros(Array_1, 3);
+    enteros.print();
+	//char
+    char Array_3[] = { 'o', 'l', 'a' };
+    DynamicArray<char> caracteres(Array_3, 3);
+    caracteres.print();
+	//string
+    string Array_4[] = { "Como", "tu", "estas?" };
+    DynamicArray<string> string(Array_4, 3);
+    string.print();
+	//claseee
+	Entero Array_5[] = { Entero(1), Entero(2), Entero(1) };
+    DynamicArray<Entero> clase(Array_5, 3);
+    clase.print();
+    return 0;
+}
